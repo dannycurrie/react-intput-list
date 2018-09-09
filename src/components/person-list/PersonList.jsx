@@ -80,9 +80,7 @@ class PersonListContainer extends Component {
     // add new person at desired index, giving focus
     const newPersons = [
       ...persons.slice(0, index),
-      {
-        ...focusPerson(newPerson())
-      },
+      focusPerson(newPerson()),
       ...persons.slice(index)
     ];
     this.setState({ persons: newPersons });
