@@ -16,10 +16,10 @@ class PersonInput extends Component {
   }
 
   render() {
-    const { key, firstName, lastName, focus, handleKey, index } = this.props;
+    const { id, firstName, lastName, focus, handleKey, index } = this.props;
     return (
       <StyledPersonInput
-        key={key}
+        key={id}
         type="text"
         defaultValue={`${firstName} ${lastName}`}
         autoFocus={focus}
