@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import PersonInput from './PersonInput';
 
 const StyledPersonList = styled.div`
   display: flex;
@@ -7,20 +8,16 @@ const StyledPersonList = styled.div`
   border: 1px solid black;
 `;
 
-const StyledListInput = styled.input`
-  border: 0px;
-  padding: 2px;
-`;
-
-const PersonList = ({ persons, addNewLine }) => (
+const PersonList = ({ persons, handleKey }) => (
   <StyledPersonList>
-    {persons.map((person, index) => (
-      <StyledListInput
-        key={person.id}
-        type="text"
-        defaultValue={`${person.firstName} ${person.secondName}`}
-        autoFocus={person.newLine}
-        onKeyUp={e => (e.keyCode === 13 ? addNewLine(index) : null)}
+    {persons.map(({ id, firstName, lastName, focus }, index) => (
+      <PersonInput
+        key={id}
+        index={index}
+        firstName={firstName}
+        lastName={lastName}
+        focus={focus}
+        handleKey={handleKey}
       />
     ))}
   </StyledPersonList>

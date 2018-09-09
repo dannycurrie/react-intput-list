@@ -7,6 +7,19 @@ const StyledPersonListContainer = styled.div`
   width: 200px;
 `;
 
+// util functions
+const focusPerson = person => ({ ...person, focus: true });
+const defocusPerson = person => ({ ...person, focus: false });
+const clearFocus = personsList => personsList.map(defocusPerson);
+const newPerson = () => ({
+  firstName: '',
+  lastName: '',
+  // id is important, ensures the PersonList component correctly idenitfies
+  // new / edited person entries
+  id: uuid(),
+  focus: false
+});
+
 class PersonListContainer extends Component {
   constructor(props) {
     super(props);
@@ -14,41 +27,56 @@ class PersonListContainer extends Component {
       persons: [
         {
           firstName: 'Person',
-          secondName: 'One',
+          lastName: 'One',
           id: uuid(),
-          newLine: false
+          focus: false
         },
         {
           firstName: 'Person',
-          secondName: 'Two',
+          lastName: 'Two',
           id: uuid(),
-          newLine: false
+          focus: false
         }
       ]
     };
 
     this.addNewLine = this.addNewLine.bind(this);
+    this.handleKey = this.handleKey.bind(this);
   }
 
-  addNewLine(index) {
-    // first unset any previous new lines
-    let newPersons = this.state.persons.map(person => ({
-      ...person,
-      newLine: false
-    }));
-    // then add new person at desired index
-    newPersons = [
-      ...newPersons.slice(0, index + 1),
+  handleKey(e, index) {
+    const newPersons = clearFocus(this.state.persons);
+    switch (e.keyCode) {
+      // ENTER
+      case 13:
+        this.addNewLine(newPersons, index + 1);
+        break;
+      // UP ARROW
+      case 38:
+        this.setFocus(newPersons, index - 1);
+        break;
+      // DOWN ARROW
+      case 40:
+        this.setFocus(newPersons, index + 1);
+        break;
+    }
+  }
+
+  setFocus(persons, index) {
+    const newPersons = persons.map(
+      (p, i) => (i === index ? focusPerson(p) : defocusPerson(p))
+    );
+    this.setState({ persons: newPersons });
+  }
+
+  addNewLine(persons, index) {
+    // add new person at desired index, giving focus
+    const newPersons = [
+      ...persons.slice(0, index),
       {
-        firstName: '',
-        secondName: '',
-        // id is important, enables the PersonList component correctly idenitfies
-        // new / edited person entries
-        // not sure how we can provision this?
-        id: uuid(),
-        newLine: true
+        ...focusPerson(newPerson())
       },
-      ...newPersons.slice(index + 1)
+      ...persons.slice(index)
     ];
     this.setState({ persons: newPersons });
   }
@@ -56,7 +84,7 @@ class PersonListContainer extends Component {
   render() {
     return (
       <StyledPersonListContainer>
-        <PersonList persons={this.state.persons} addNewLine={this.addNewLine} />
+        <PersonList persons={this.state.persons} handleKey={this.handleKey} />
       </StyledPersonListContainer>
     );
   }
