@@ -23,7 +23,7 @@ const newPerson = () => ({
   focus: false
 });
 
-class PersonListContainer extends Component {
+class PersonList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -105,4 +105,4 @@ class PersonListContainer extends Component {
   }
 }
 
-export default PersonListContainer;
+export default PersonList;
